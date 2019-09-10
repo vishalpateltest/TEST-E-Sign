@@ -1,0 +1,315 @@
+swagger: '2.0'
+info:
+  description: >-
+    eSign Genie is the #1 easiest and most collaborative contract management and
+    esignature software with the most robust functionality amongst its peers.
+    Key features include: Collaborative contracts and agreement building;
+    template contract creation; esignature workflow to obtain esignature(s) from
+    single, or multiple users; advanced bulk esignature solution with dashboard;
+    notification receiving control; API for esignature integration with other
+    software or websites and a lot more... For more information on eSign Genie
+    Software, please contact us at info@esigngenie.com
+  version: 1.0.0
+  title: eSign Genie
+  termsOfService: '#'
+  contact:
+    email: info@esigngenie.com
+host: esigngenie.com
+basePath: /esign/api
+schemes:
+  - https
+consumes:
+  - application/json
+  - application/x-www-form-urlencoded
+produces:
+  - application/json
+  - application/x-www-form-urlencoded
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: access_token
+    in: header
+paths:
+  /accounts/create:
+    post:
+      summary: >-
+        To create a new account via API access_token is not required, instead
+        the client_id and client_secret parameter are required to authenticate
+        the API consumer
+      operationId: postCreateAccount
+      tags:
+        - Account API
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            To create a new account via API access_token is not required,
+            instead the client_id and client_secret parameter are required to
+            authenticate the API consumer
+          schema:
+            $ref: '#/definitions/createaccount'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/createAccountResponse'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /accounts/cancel:
+    get:
+      summary: 'To cancel an account via API, please make a call to /accounts/cancel'
+      operationId: getCancelAccount
+      tags:
+        - Account API
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                example: success
+              message:
+                example: company 32567 cancelled successfully
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /accounts/reactivate:
+    get:
+      summary: >-
+        To reactivate an account via API, please make a call to
+        /accounts/reactivate
+      operationId: getReactivateAccount
+      tags:
+        - Account API
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                example: success
+              message:
+                example: company 32567 reactivated successfully
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /accounts/changenumberoflicences:
+    get:
+      summary: >-
+        To cancel an account via API, please make a call to
+        /accounts/changenumberoflicences
+      operationId: getChangeNumberOfLicences
+      tags:
+        - Account API
+      parameters:
+        - in: query
+          name: newNumberOfLicences
+          description: The new required number of licences for the account
+          type: string
+          required: true
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                example: success
+              message:
+                example: company 32567 licence number changed to 3
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /accounts/changeplan:
+    get:
+      summary: >-
+        To change the subscription plan of an account, please make a call to
+        /accounts/changeplan
+      operationId: getChangeSubscriptionPlan
+      tags:
+        - Account API
+      parameters:
+        - in: query
+          name: newPlan
+          description: Name of plan that you want to subscribe to
+          type: string
+        - in: query
+          name: newNumberOfLicences
+          description: The new required number of licences for the account in the new plan
+          type: string
+          required: true
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                example: success
+              message:
+                example: company 32567 plan changed to Business Premium
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+parameters: {}
+definitions:
+  createaccount:
+    type: object
+    properties:
+      client_id:
+        type: string
+        description: Your API Key from the API menu under the Settings Tab
+        example: YOUR_CLIENT_ID
+      client_secret:
+        type: string
+        description: Your API Secret from the API menu under the Settings Tab
+        example: YOUR_CLIENT_SECRET
+      company:
+        type: object
+        properties:
+          companyName:
+            type: string
+            description: Name of company account to be created in eSign Genie
+            example: Wayne Tech
+          companyAddress:
+            type: string
+            description: the address of the company location
+            example: 'LA, US'
+      user:
+        type: object
+        properties:
+          firstName:
+            type: string
+            description: First name of account user
+            example: Bruce
+          lastName:
+            type: string
+            description: Last name of account user
+            example: Wayne
+          emailId:
+            type: string
+            description: Email address of account user
+            example: bruce.wayne_as@esigngenie.com
+          loginPassword:
+            type: string
+            description: >-
+              The login password that the client will use to login in eSign
+              Genie
+            example: '12345'
+      planName:
+        type: string
+        description: Can be one the plan names
+        example: Professional
+      accountType:
+        type: string
+        description: Use partner-pay for partner managed type of accounts
+        example: partner-pay
+      partner_code:
+        type: string
+        description: >-
+          Enter the unique partner code assigned to the partner to link this
+          account with the specified partner
+        example: YOUR_PARTNER_CODE
+  createAccountResponse:
+    type: object
+    properties: {}

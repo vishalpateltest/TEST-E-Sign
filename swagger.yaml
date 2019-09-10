@@ -20,16 +20,922 @@ schemes:
   - https
 consumes:
   - application/json
-  - application/x-www-form-urlencoded
 produces:
   - application/json
-  - application/x-www-form-urlencoded
 securityDefinitions:
   Bearer:
     type: apiKey
     name: access_token
-    in: header
+    in: query
 paths:
+  /oauth2/access_token:
+    x-related-model: client
+    post:
+      summary: Client Credentials Access your eSign Genie account from your application
+      operationId: postoauth2AccessToken
+      tags:
+        - Authentication
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            This method enables the submission of a Quick Application from the
+            Partner.
+          schema:
+            $ref: '#/definitions/authentication'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                example: ACCESS_TOKEN
+              token_type:
+                type: string
+                example: bearer
+              expires_in:
+                type: string
+                example: '31536000'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /folders/createfolder:
+    x-related-model: client
+    post:
+      summary: >-
+        With eSign Genie API you can create a folder of documents and send them
+        for signature right from your own application.
+      operationId: postFoldersCreateFolder
+      tags:
+        - Folders API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            This method enables the submission of a Quick Application from the
+            Partner.
+          schema:
+            $ref: '#/definitions/createfolder'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: success
+              message:
+                type: string
+                example: folder of document(s) successfully created
+              embeddedSigningSessions:
+                type: array
+                xml:
+                  name: fileName
+                  wrapped: true
+                items:
+                  $ref: '#/definitions/embeddedSigningSessions'
+              folder:
+                $ref: '#/definitions/folder'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /folders/updateEnvelopeFields:
+    x-related-model: client
+    post:
+      summary: >-
+        You can update envelope and the custom fields (custom_field1 and
+        custom_field2) anytime before execution using the 'Update Envelope
+        Fields' API. Envelope fields for a party can only be updated if the
+        document has not been signed by that party yet.
+      operationId: postFoldersUpdateEnvelopeFields
+      tags:
+        - Folders API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            This method enables the submission of a Quick Application from the
+            Partner.
+          schema:
+            $ref: '#/definitions/updateenvelopefields'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: success
+              custom_field1:
+                properties:
+                  name:
+                    type: string
+                    description: ''
+                    example: NAME
+                  value:
+                    type: string
+                    description: ''
+                    example: VALUE
+              custom_field2:
+                properties:
+                  name:
+                    type: string
+                    description: ''
+                    example: NAME
+                  value:
+                    type: string
+                    description: ''
+                    example: VALUE
+              allFieldsNameValue:
+                type: array
+                xml:
+                  name: allFieldsNameValue
+                  wrapped: true
+                items:
+                  $ref: '#/definitions/allFieldsNameValue'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /folders/myfolder/:
+    x-related-model: client
+    get:
+      summary: You can poll our API to get the folder/document data
+      operationId: getFoldersMyFolderID
+      tags:
+        - Folders API
+      security:
+        - Bearer: []
+      parameters:
+        - name: folderId
+          in: query
+          description: ID of pet to return
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: success
+              folder:
+                $ref: '#/definitions/getfolder'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /folders/download/:
+    x-related-model: client
+    get:
+      summary: >-
+        You can download executed folder document(s) as well as signature
+        certificate all at once in a zip file.
+      operationId: getDownloadAllDocumentsFolder
+      tags:
+        - Folders API
+      security:
+        - Bearer: []
+      parameters:
+        - name: folderId
+          in: query
+          description: Your FOLDER_ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: >-
+            Returns ZIP file binary stream of all the documents in the folder
+            with the signature certificate
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /folders/document/download/:
+    x-related-model: client
+    get:
+      summary: You can download individual document as a pdf file.
+      operationId: getDownloadDocument
+      tags:
+        - Folders API
+      security:
+        - Bearer: []
+      parameters:
+        - name: folderId
+          in: query
+          description: Your FOLDER_ID
+          required: true
+          type: integer
+        - name: docNumber
+          in: query
+          description: >-
+            The index of the document starting from 1 whose PDF you want to
+            download.
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: >-
+            Returns PDF file binary stream of the document which you can save as
+            PDF file.
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /folders/movetorecyclebin:
+    post:
+      summary: >-
+        Using eSign Genie API you can move your document(s) folders to recycle
+        bin. Documents in recycle bin are permanently removed from eSign Genie
+        systems automatically after 14 days.
+      operationId: postDeleteYourDocuments
+      tags:
+        - Folders API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            This method enables the submission of a Quick Application from the
+            Partner.
+          schema:
+            $ref: '#/definitions/movetorecyclebin'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: success
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /templates/createtemplate:
+    x-related-model: client
+    post:
+      summary: >-
+        To create a template from PDF files you need to make a call to
+        /templates/createtemplate with the given parameters.
+      operationId: postCreateTemplate
+      tags:
+        - Templates API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            This method enables the submission of a Quick Application from the
+            Partner.
+          schema:
+            $ref: '#/definitions/createtemplate'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              embeddedToken:
+                type: string
+                example: EMBEDDED_TOKEN
+              embeddedTemplateSessionURL:
+                type: string
+                example: UNIQUE_EMBEDDED_SESSION_URL
+              template:
+                $ref: '#/definitions/template'
+              result:
+                type: string
+                example: success
+              message:
+                type: string
+                example: template successfully created
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /templates/createFolder:
+    x-related-model: client
+    post:
+      summary: >-
+        To create a folder of documents from templates, you need to make a call
+        to /templates/createFolder with the following parameters and use
+        template_id to specify the templates:
+      operationId: postCreateFolderTemplate
+      tags:
+        - Templates API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            This method enables the submission of a Quick Application from the
+            Partner.
+          schema:
+            $ref: '#/definitions/createfolderTemplet'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: success
+              message:
+                type: string
+                example: folder of document(s) successfully created
+              embeddedSigningSessions:
+                type: array
+                xml:
+                  name: fileName
+                  wrapped: true
+                items:
+                  $ref: '#/definitions/embeddedSigningSessions'
+              folder:
+                $ref: '#/definitions/folder'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /templates/list:
+    x-related-model: client
+    get:
+      summary: >-
+        You can get a list of all the templates from your eSign Genie into your
+        application using the following call
+      operationId: getlistofalltemplatesforyouraccount
+      tags:
+        - Templates API
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: success
+              total_templates:
+                type: string
+                example: '9'
+              template:
+                $ref: '#/definitions/template'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /templates/mytemplate/:
+    x-related-model: client
+    get:
+      summary: You can poll our API to get the template data
+      operationId: getTemplateData
+      tags:
+        - Templates API
+      security:
+        - Bearer: []
+      parameters:
+        - name: templateId
+          in: query
+          description: Your TEMPLATE_ID
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: success
+              total_templates:
+                type: string
+                example: '9'
+              template:
+                $ref: '#/definitions/template'
+              allfields:
+                $ref: '#/definitions/allfields'
+              allfields1:
+                $ref: '#/definitions/allfields'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /parties/getEmailGroups:
+    x-related-model: client
+    post:
+      summary: >-
+        You can pass no parameter in the request to get all email group details
+        in your account.
+      operationId: getEmailGroupDetails
+      tags:
+        - Parties API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            This method enables the submission of a Quick Application from the
+            Partner.
+          schema:
+            $ref: '#/definitions/emailGroupNames'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              allEmailGroups:
+                type: array
+                xml:
+                  name: fileName
+                  wrapped: true
+                items:
+                  $ref: '#/definitions/allEmailGroups'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /parties/createEmailGroup:
+    x-related-model: client
+    post:
+      summary: >-
+        To create a new email group via API, please make a call to
+        parties/createEmailGroup with the following parameters.
+      operationId: getCreateEmailGroup
+      tags:
+        - Parties API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: >-
+            This method enables the submission of a Quick Application from the
+            Partner.
+          schema:
+            $ref: '#/definitions/createEmailGroup'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                type: string
+                example: success
+              message:
+                type: string
+                example: new email group successfully added
+              emailGroup:
+                type: array
+                xml:
+                  name: fileName
+                  wrapped: true
+                items:
+                  $ref: '#/definitions/allEmailGroups'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /users/create:
+    post:
+      summary: >-
+        To create a new user via API, please make a call to /users/create with
+        the following parameters.
+      operationId: postCreateUser
+      tags:
+        - Users API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: Create User
+          schema:
+            $ref: '#/definitions/createUserData'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                example: success
+              message:
+                example: new user successfully added
+              user:
+                $ref: '#/definitions/responseCreateUserData'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /users/update:
+    post:
+      summary: >-
+        To update a user via API, please make a call to /users/update with the
+        following parameters.
+      operationId: postUpdateUser
+      tags:
+        - Users API
+      security:
+        - Bearer: []
+      parameters:
+        - in: body
+          name: body
+          description: Update User
+          schema:
+            $ref: '#/definitions/updateUserData'
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                example: success
+              message:
+                example: user 54 updated successfully.
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /users/delete/:
+    get:
+      summary: >-
+        To delete a user via API, please make a call to /users/delete with the
+        following parameter.
+      operationId: getDeleteUser
+      tags:
+        - Users API
+      security:
+        - Bearer: []
+      parameters:
+        - name: userId
+          in: query
+          format: uuid
+          type: integer
+          description: Party Id for that user
+          required: true
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            type: object
+            properties:
+              result:
+                example: success
+              message:
+                example: user 54 deleted successfully
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
+  /users/list:
+    get:
+      summary: 'To get a list of all the users in the account, use the following call'
+      operationId: getUserList
+      tags:
+        - Users API
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: A successful response
+          schema:
+            $ref: '#/definitions/usersListData'
+        '201':
+          description: Response to a POST that results in a creation.
+        '204':
+          description: Response to a successful request that won't be returning a body.
+        '400':
+          description: Bad Request (A validation exception has occurred.)
+        '401':
+          description: Unauthorized (Invalid authorization credentials.)
+        '403':
+          description: >-
+            When authentication succeeded but authenticated user doesn't have
+            access to the resource
+        '404':
+          description: Not Found (The resource you have specified cannot be found)
+        '500':
+          description: Internal Error
+        '501':
+          description: >-
+            Not Implemented (The method you have called has not been
+            implemented)
+        '503':
+          description: Rate Limit Exceeded
   /accounts/create:
     post:
       summary: >-
@@ -39,6 +945,8 @@ paths:
       operationId: postCreateAccount
       tags:
         - Account API
+      security:
+        - Bearer: []
       parameters:
         - in: body
           name: body
@@ -123,6 +1031,8 @@ paths:
       operationId: getReactivateAccount
       tags:
         - Account API
+      security:
+        - Bearer: []
       responses:
         '200':
           description: A successful response
@@ -163,6 +1073,8 @@ paths:
       operationId: getChangeNumberOfLicences
       tags:
         - Account API
+      security:
+        - Bearer: []
       parameters:
         - in: query
           name: newNumberOfLicences
@@ -209,6 +1121,8 @@ paths:
       operationId: getChangeSubscriptionPlan
       tags:
         - Account API
+      security:
+        - Bearer: []
       parameters:
         - in: query
           name: newPlan
@@ -253,8 +1167,1247 @@ paths:
           description: Rate Limit Exceeded
 parameters: {}
 definitions:
+  authentication:
+    type: object
+    required:
+      - grant_type
+      - client_id
+      - client_secret
+      - scope
+    properties:
+      grant_type:
+        type: string
+        example: client_credentials
+        description: This value should be client_credentials
+      client_id:
+        type: string
+        description: Your API Key from the API menu under the Settings Tab
+      client_secret:
+        type: string
+        description: Your API Secret from the API menu under the Settings Tab
+      scope:
+        type: string
+        example: read-write
+        description: 'Please use read-write, in order to send documents'
+    xml:
+      name: authentication
+  movetorecyclebin:
+    type: object
+    required:
+      - folderIds
+    properties:
+      folderIds:
+        type: array
+        items:
+          type: integer
+          example: 219
+    xml:
+      name: movetorecyclebin
+  createfolder:
+    type: object
+    required:
+      - folderName
+      - fileUrls
+      - fileNames
+      - processTextTags
+      - parties
+    properties:
+      folderName:
+        type: string
+        description: Sample Documents
+        example: Sample Documents
+      fileUrls:
+        type: array
+        xml:
+          name: fileUrl
+          wrapped: true
+        items:
+          type: string
+          example: URL_TO_DOCUMENT_1
+      fileNames:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          type: string
+          example: document_1.pdf
+      processTextTags:
+        type: boolean
+        description: ''
+        example: true
+      signInSequence:
+        type: boolean
+        description: ''
+        example: true
+      inPersonEnable:
+        type: boolean
+        description: ''
+        example: true
+      custom_field1:
+        properties:
+          name:
+            type: string
+            description: Sample Documents
+            example: NAME
+          value:
+            type: string
+            description: Sample Documents
+            example: VALUE
+      custom_field2:
+        properties:
+          name:
+            type: string
+            description: Sample Documents
+            example: NAME
+          value:
+            type: string
+            description: Sample Documents
+            example: VALUE
+      sendNow:
+        type: boolean
+        description: ''
+        example: false
+      emailTemplateId:
+        type: integer
+        description: ''
+        example: 2
+      emailTemplateCustomFields:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/emailTemplateCustomFields'
+      createEmbeddedSendingSession:
+        type: boolean
+        description: ''
+        example: false
+      fixRecipientParties:
+        type: boolean
+        description: ''
+        example: true
+      fixDocuments:
+        type: boolean
+        description: ''
+        example: true
+      sendSuccessUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      sendErrorUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      createEmbeddedSigningSession:
+        type: boolean
+        description: ''
+        example: true
+      createEmbeddedSigningSessionForAllParties:
+        type: boolean
+        description: ''
+        example: false
+      embeddedSignersEmailIds:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          type: string
+          example: FIRST_EMBEDDED_SIGNER_EMAIL
+      signSuccessUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      signDeclineUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      signLaterUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      signErrorUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      themeColor:
+        type: string
+        description: ''
+        example: ANY_CSS_COLOR_TO_MATCH_YOUR_APPLICATION
+      parties:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/parties'
+      fields:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/fields'
+      senderEmail:
+        type: string
+        description: ''
+        example: user2@example.com
+  emailTemplateCustomFields:
+    type: object
+    properties:
+      tag:
+        type: string
+        description: Sample Documents
+        example: CUSTOM_TAGS_2
+      type:
+        type: string
+        description: Sample Documents
+        example: hyperlink
+      value:
+        type: string
+        description: Sample Documents
+        example: click here's
+      url:
+        type: string
+        description: Sample Documents
+        example: HYPERTEXT_REFERENCE
+  parties:
+    type: object
+    properties:
+      firstName:
+        type: string
+        description: Sample Documents
+        example: FIRST_NAME_OF_RECIPIENT_PARTY
+      lastName:
+        type: string
+        description: Sample Documents
+        example: LAST_NAME_OF_RECIPIENT_PARTY
+      emailId:
+        type: string
+        description: Sample Documents
+        example: EMAIL_ID_OF_RECIPIENT_PARTY
+      permission:
+        type: string
+        description: Sample Documents
+        example: FILL_FIELDS_AND_SIGN
+      sequence:
+        type: integer
+        description: Sample Documents
+        example: 1
+      hostEmailId:
+        type: string
+        description: Sample Documents
+        example: EMAIL_ID_OF_INPERSON_ADMINISTRATOR
+      allowNameChange:
+        type: boolean
+        description: ''
+        example: true
+  fields:
+    type: object
+    properties:
+      type:
+        type: string
+        description: Sample Documents
+        example: text
+      x:
+        type: integer
+        description: Sample Documents
+        example: 100
+      'y':
+        type: integer
+        description: Sample Documents
+        example: 50
+      width:
+        type: integer
+        description: Sample Documents
+        example: 60
+      height:
+        type: integer
+        description: Sample Documents
+        example: 20
+      documentNumber:
+        type: integer
+        description: Sample Documents
+        example: 1
+      pageNumber:
+        type: integer
+        description: Sample Documents
+        example: 1
+      tabOrder:
+        type: integer
+        description: Sample Documents
+        example: 1
+      party:
+        type: integer
+        description: Sample Documents
+        example: 1
+      name:
+        type: string
+        description: Sample Documents
+        example: optional name
+      tooltip:
+        type: string
+        description: Sample Documents
+        example: ''
+      value:
+        type: string
+        description: Sample Documents
+        example: optional value
+      required:
+        type: boolean
+        description: Sample Documents
+        example: true
+      characterLimit:
+        type: integer
+        description: Sample Documents
+        example: 100
+      fontSize:
+        type: integer
+        description: Sample Documents
+        example: 12
+      fontColor:
+        type: string
+        description: Sample Documents
+        example: '#000000'
+      validation:
+        type: string
+        description: Sample Documents
+        example: Letters
+  embeddedSigningSessions:
+    type: object
+    properties:
+      emailIdOfSigner:
+        type: string
+        description: Sample Documents
+        example: mtariq@accountsight.com
+      embeddedToken:
+        type: string
+        description: Sample Documents
+        example: EMBEDDED_TOKEN
+      embeddedSessionURL:
+        type: string
+        description: Sample Documents
+        example: UNIQUE_EMBEDDED_SESSION_URL
+  folder:
+    type: object
+    properties:
+      folderId:
+        type: integer
+        description: ''
+        example: 179
+      folderName:
+        type: string
+        description: ''
+        example: fw4
+      folderAuthorId:
+        type: integer
+        description: ''
+        example: 1
+      folderCompanyId:
+        type: integer
+        description: ''
+        example: 11
+      folderCreationDate:
+        type: integer
+        description: ''
+        example: 1441268056000
+      folderSentDate:
+        type: integer
+        description: ''
+        example: 1442470444000
+      folderStatus:
+        type: string
+        description: ''
+        example: SHARED
+      folderDocumentIds:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          type: integer
+          example: 420
+      documentsList:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/documentsList'
+      folderRecipientParties:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/folderRecipientParties'
+      folderAccessURLForAuthor:
+        type: string
+        description: ''
+        example: >-
+          https://www.esigngenie.com/esign/viewDocumentDirect?encrDocId=jZvyX4AFC2kv7AU%2BBtM16A%3D%3D&partyId=1
+      bulkId:
+        type: integer
+        description: ''
+        example: 0
+      enforceSignWorkflow:
+        type: boolean
+        description: ''
+        example: false
+      currentWorkflowStep:
+        type: integer
+        description: ''
+        example: 1
+      transactionSource:
+        type: string
+        description: ''
+        example: API-1-via_file_upload
+      editable:
+        type: boolean
+        description: ''
+        example: false
+  getfolder:
+    type: object
+    properties:
+      folderId:
+        type: integer
+        description: ''
+        example: 179
+      folderName:
+        type: string
+        description: ''
+        example: fw4
+      folderAuthorId:
+        type: integer
+        description: ''
+        example: 1
+      folderCompanyId:
+        type: integer
+        description: ''
+        example: 11
+      folderCreationDate:
+        type: integer
+        description: ''
+        example: 1441268056000
+      folderSentDate:
+        type: integer
+        description: ''
+        example: 1442470444000
+      folderStatus:
+        type: string
+        description: ''
+        example: SHARED
+      folderDocumentIds:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          type: integer
+          example: 101857
+      documentsList:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/documentsList'
+      folderRecipientParties:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/folderRecipientParties'
+      folderAccessURLForAuthor:
+        type: string
+        description: ''
+        example: >-
+          https://www.esigngenie.com/esign/viewDocumentDirect?encrDocId=jZvyX4AFC2kv7AU%2BBtM16A%3D%3D&partyId=1
+      bulkId:
+        type: integer
+        description: ''
+        example: 0
+      enforceSignWorkflow:
+        type: boolean
+        description: ''
+        example: false
+      currentWorkflowStep:
+        type: integer
+        description: ''
+        example: 1
+      transactionSource:
+        type: string
+        description: ''
+        example: API-1-via_file_upload
+      editable:
+        type: boolean
+        description: ''
+        example: false
+      inPersonSignable:
+        type: boolean
+        description: ''
+        example: false
+      overrideAccountReminders:
+        type: boolean
+        description: ''
+        example: false
+      envelopeId:
+        type: integer
+        description: ''
+        example: 86377
+      envelopeName:
+        type: string
+        description: ''
+        example: eSignGenie Sample
+      envelopeOriginatorId:
+        type: integer
+        description: ''
+        example: 1
+      envelopeCompanyId:
+        type: integer
+        description: ''
+        example: 12
+      envelopeDate:
+        type: integer
+        description: ''
+        example: 1473332678000
+      envelopeSharedDate:
+        type: integer
+        description: ''
+        example: null
+      envelopeStatus:
+        type: string
+        description: ''
+        example: DRAFT
+      envelopeContractIds:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          type: integer
+          example: 101857
+      envelopePartyPermissions:
+        $ref: '#/definitions/folderRecipientParties'
+      allfields:
+        $ref: '#/definitions/allfields'
+      allFieldsNameValue:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/allFieldsNameValue'
+      Folder History:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/FolderHistory'
+  documentsList:
+    type: object
+    properties:
+      documentId:
+        type: integer
+        description: Sample Documents
+        example: 420
+      companyId:
+        type: integer
+        description: Sample Documents
+        example: 11
+      contractCreatedBy:
+        type: integer
+        description: Sample Documents
+        example: 1
+      contractCreatedOn:
+        type: integer
+        description: Sample Documents
+        example: 1441268055000
+      contractType:
+        type: string
+        description: Sample Documents
+        example: W4
+      contractStatus:
+        type: string
+        description: Sample Documents
+        example: WAITING_FOR_SIGNATURE
+      editable:
+        type: boolean
+        description: ''
+        example: true
+      contractVersionId:
+        type: integer
+        description: Sample Documents
+        example: 488
+      contractVersionName:
+        type: string
+        description: Sample Documents
+        example: fw4
+      contractVersionDesc:
+        type: string
+        description: Sample Documents
+        example: this is a non editable form W4
+      versionCreatedby:
+        type: integer
+        description: Sample Documents
+        example: 1
+      versionCreatedOn:
+        type: integer
+        description: Sample Documents
+        example: 1441268055000
+      contractVersionNumber:
+        type: integer
+        description: Sample Documents
+        example: 1
+  folderRecipientParties:
+    type: object
+    properties:
+      partyId:
+        type: integer
+        description: ''
+        example: 52
+      partyDetails:
+        $ref: '#/definitions/partyDetails'
+      contractPermissions:
+        type: string
+        description: ''
+        example: FILL_FIELDS_AND_SIGN
+      partySequence:
+        type: integer
+        description: ''
+        example: 1
+      workflowSignSequence:
+        type: integer
+        description: ''
+        example: 1
+      envelopeId:
+        type: integer
+        description: ''
+        example: 179
+      sharingMode:
+        type: string
+        description: ''
+        example: email
+      folderAccessURL:
+        type: string
+        description: ''
+        example: >-
+          https://www.esigngenie.com/esign/viewDocumentDirect?encrDocId=QoS4qeiO870mBXNbcuUWYA%3D%3D&partyId=52
+      securityMode:
+        type: string
+        description: ''
+        example: none
+      extraComments:
+        type: string
+        description: ''
+        example: null
+  partyDetails:
+    type: object
+    properties:
+      partyId:
+        type: integer
+        description: Sample Documents
+        example: 52
+      firstName:
+        type: string
+        description: Sample Documents
+        example: Tariq
+      lastName:
+        type: string
+        description: Sample Documents
+        example: Acc
+      emailId:
+        type: string
+        description: Sample Documents
+        example: mtariq@accountsight.com
+      address:
+        type: string
+        description: Sample Documents
+        example: ''
+      dateCreated:
+        type: integer
+        description: Sample Documents
+        example: 1413013300000
+  updateenvelopefields:
+    type: object
+    properties:
+      folderId:
+        type: string
+        description: ''
+        example: FOLDER_ID
+      custom_field1:
+        properties:
+          name:
+            type: string
+            description: ''
+            example: NAME
+          value:
+            type: string
+            description: ''
+            example: VALUE
+      custom_field2:
+        properties:
+          name:
+            type: string
+            description: ''
+            example: NAME
+          value:
+            type: string
+            description: ''
+            example: VALUE
+      FIELD1_NAME:
+        type: string
+        description: ''
+        example: VALUE
+      FIELD2_NAME:
+        type: string
+        description: ''
+        example: VALUE
+  allFieldsNameValue:
+    type: object
+    properties:
+      fieldId:
+        type: integer
+        description: ''
+        example: 44796
+      documentId:
+        type: integer
+        description: ''
+        example: 4096
+      documentVersionId:
+        type: integer
+        description: ''
+        example: 4180
+      fieldType:
+        type: string
+        description: ''
+        example: textfield
+      name:
+        type: string
+        description: ''
+        example: FIELD1_NAME
+      value:
+        type: string
+        description: Sample Documents
+        example: VALUE
+  createtemplate:
+    type: object
+    required:
+      - templateName
+      - templateUrl
+      - processTextTags
+      - numberOfParties
+      - shareAll
+    properties:
+      templateUrl:
+        type: string
+        description: ''
+        example: URL_TO_DOCUMENT
+      templateName:
+        type: string
+        description: ''
+        example: template.pdf
+      processTextTags:
+        type: boolean
+        description: ''
+        example: true
+      numberOfParties:
+        type: integer
+        description: ''
+        example: 2
+      themeColor:
+        type: string
+        description: ''
+        example: '#f4e542'
+      createEmbeddedTemplateSession:
+        type: boolean
+        description: ''
+        example: true
+      shareAll:
+        type: boolean
+        description: ''
+        example: true
+      authorEmail:
+        type: string
+        description: ''
+        example: author@example.com
+      redirectURL:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      fields:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/fields'
+  template:
+    type: object
+    properties:
+      templateId:
+        type: integer
+        description: ''
+        example: 174
+      templateName:
+        type: string
+        description: ''
+        example: testTemplate
+      templateDesc:
+        type: string
+        description: ''
+        example: null
+      templateType:
+        type: string
+        description: ''
+        example: null
+      templateCreationDate:
+        type: integer
+        description: ''
+        example: null
+      templateLastUpdateDate:
+        type: integer
+        description: ''
+        example: null
+      editable:
+        type: boolean
+        description: ''
+        example: false
+      numberOfParties:
+        type: integer
+        description: ''
+        example: 1
+      totalPages:
+        type: integer
+        description: ''
+        example: 0
+      companyId:
+        type: integer
+        description: ''
+        example: 50
+      templateCreatedBy:
+        $ref: '#/definitions/templateCreatedBy'
+      templateLastUpdatedBy:
+        $ref: '#/definitions/templateCreatedBy'
+      shareAll:
+        type: boolean
+        description: ''
+        example: true
+      templateCustomName:
+        type: string
+        description: ''
+        example: ''
+  templateCreatedBy:
+    type: object
+    properties:
+      partyId:
+        type: integer
+        description: ''
+        example: 3062
+      firstName:
+        type: string
+        description: ''
+        example: Govind
+      lastName:
+        type: string
+        description: ''
+        example: Bhandari
+      emailId:
+        type: string
+        description: ''
+        example: gbhandari@esigngenie.com
+      address:
+        type: string
+        description: ''
+        example: ''
+      dateCreated:
+        type: integer
+        description: ''
+        example: 1503527343000
+      optOutEmails:
+        type: boolean
+        description: ''
+        example: false
+      companyId:
+        type: integer
+        description: ''
+        example: 50
+      userRole:
+        type: string
+        description: ''
+        example: super_admin
+      userAddedDate:
+        type: integer
+        description: ''
+        example: 1504550757000
+      department:
+        type: string
+        description: ''
+        example: ''
+      title:
+        type: string
+        description: ''
+        example: ''
+      active:
+        type: boolean
+        description: ''
+        example: true
+      requestLocale:
+        type: string
+        description: ''
+        example: en
+      share_among_department:
+        type: boolean
+        description: ''
+        example: false
+      managerId:
+        type: string
+        description: ''
+        example: null
+  createfolderTemplet:
+    type: object
+    required:
+      - folderName
+      - parties
+    properties:
+      folderName:
+        type: string
+        description: Sample Documents
+        example: Sample Documents
+      fields:
+        properties:
+          FIELD1_NAME:
+            type: string
+            description: ''
+            example: FIELD1_VALUE
+      parties:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/parties'
+      senderEmail:
+        type: string
+        description: ''
+        example: user2@example.com
+      signInSequence:
+        type: boolean
+        description: ''
+        example: true
+      custom_field1:
+        properties:
+          name:
+            type: string
+            description: Sample Documents
+            example: NAME
+          value:
+            type: string
+            description: Sample Documents
+            example: VALUE
+      custom_field2:
+        properties:
+          name:
+            type: string
+            description: Sample Documents
+            example: NAME
+          value:
+            type: string
+            description: Sample Documents
+            example: VALUE
+      sendNow:
+        type: boolean
+        description: ''
+        example: false
+      emailTemplateId:
+        type: integer
+        description: ''
+        example: 2
+      emailTemplateCustomFields:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/emailTemplateCustomFields'
+      createEmbeddedSendingSession:
+        type: boolean
+        description: ''
+        example: false
+      inPersonEnable:
+        type: boolean
+        description: ''
+        example: true
+      fixRecipientParties:
+        type: boolean
+        description: ''
+        example: true
+      fixDocuments:
+        type: boolean
+        description: ''
+        example: true
+      sendSuccessUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      sendErrorUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      createEmbeddedSigningSession:
+        type: boolean
+        description: ''
+        example: true
+      createEmbeddedSigningSessionForAllParties:
+        type: boolean
+        description: ''
+        example: false
+      embeddedSignersEmailIds:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          type: string
+          example: FIRST_EMBEDDED_SIGNER_EMAIL
+      signSuccessUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      signDeclineUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      signLaterUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      signErrorUrl:
+        type: string
+        description: ''
+        example: YOUR_PAGE_TO_REDIRECT_USER_FROM_EMBEDDED_SESSION
+      themeColor:
+        type: string
+        description: ''
+        example: ANY_CSS_COLOR_TO_MATCH_YOUR_APPLICATION
+  allfields:
+    type: array
+    xml:
+      name: fileName
+      wrapped: true
+    items:
+      properties:
+        fieldTagId:
+          type: integer
+          description: ''
+          example: 44796
+        contractId:
+          type: integer
+          description: ''
+          example: 4096
+        versionId:
+          type: integer
+          description: ''
+          example: 4180
+        templateId:
+          type: integer
+          description: ''
+          example: 4180
+        companyId:
+          type: integer
+          description: ''
+          example: 11
+        fieldType:
+          type: string
+          description: ''
+          example: textfield
+        documentPageNumber:
+          type: integer
+          description: ''
+          example: 4180
+        coordinateXRatio:
+          type: integer
+          description: ''
+          example: 0.142763
+        coordinateYRatio:
+          type: integer
+          description: ''
+          example: 0.415264
+        elementWidthRatio:
+          type: integer
+          description: ''
+          example: 0.197927
+        elementHeightRatio:
+          type: integer
+          description: ''
+          example: 0.0304487
+        docFieldId:
+          type: integer
+          description: ''
+          example: 48
+        dependent:
+          type: boolean
+          description: ''
+          example: false
+        parentTagId:
+          type: string
+          description: ''
+          example: ''
+        parentTagValueToCompare:
+          type: string
+          description: ''
+          example: ''
+        conditionResult:
+          type: string
+          description: ''
+          example: null
+        tabOrder:
+          type: string
+          description: ''
+          example: null
+        textfieldName:
+          type: string
+          description: ''
+          example: ''
+        value:
+          type: string
+          description: ''
+          example: Tariq
+        description:
+          type: string
+          description: ''
+          example: ''
+        partyResponsible:
+          type: integer
+          description: ''
+          example: 1
+        required:
+          type: boolean
+          description: ''
+          example: false
+        multiLine:
+          type: boolean
+          description: ''
+          example: false
+        fontSize:
+          type: integer
+          description: ''
+          example: 16
+        fontFamily:
+          type: string
+          description: ''
+          example: default
+        fontColor:
+          type: string
+          description: ''
+          example: '#800080'
+        readOnly:
+          type: boolean
+          description: ''
+          example: false
+        systemField:
+          type: boolean
+          description: ''
+          example: false
+  FolderHistory:
+    type: object
+    properties:
+      firstName:
+        type: string
+        description: ''
+        example: John
+      lastName:
+        type: string
+        description: ''
+        example: Doe
+      email:
+        type: string
+        description: ''
+        example: johndoe@esigngenie.com
+      envelopeId:
+        type: integer
+        description: ''
+        example: 86377
+      dateChanged:
+        type: integer
+        description: ''
+        example: 1564737942000
+      changeDoneByParty:
+        type: integer
+        description: ''
+        example: 1
+      action:
+        type: string
+        description: ''
+        example: Created
+  emailGroupNames:
+    type: object
+    properties:
+      emailGroupNames:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          type: string
+          example: Email_Group_1
+  allEmailGroups:
+    type: object
+    properties:
+      groupId:
+        type: integer
+        description: ''
+        example: 1
+      groupName:
+        type: string
+        description: ''
+        example: Email_Group_1
+      groupDesc:
+        type: string
+        description: ''
+        example: ''
+      dateCreated:
+        type: integer
+        description: ''
+        example: 1512677389000
+      companyId:
+        type: integer
+        description: ''
+        example: 11
+      parties:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/parties'
+  createEmailGroup:
+    type: object
+    properties:
+      emailGroupName:
+        type: string
+        description: ''
+        example: Email_Group_1
+      emailGroupDescription:
+        type: string
+        description: ''
+        example: Email_Group_Description
+      parties:
+        type: array
+        xml:
+          name: fileName
+          wrapped: true
+        items:
+          $ref: '#/definitions/parties'
   createaccount:
     type: object
+    required:
+      - company
+      - user
+      - accountType
     properties:
       client_id:
         type: string
@@ -312,4 +2465,181 @@ definitions:
         example: YOUR_PARTNER_CODE
   createAccountResponse:
     type: object
-    properties: {}
+    properties:
+      refresh_token:
+        example: bd7f308011b34605bc1ab79cbca16c3c
+      access_token:
+        example: 952012fd55e7421faf8d1ac80e30dd0a
+      token_type:
+        example: bearer
+      expires_in:
+        example: '31535999'
+      result:
+        example: success
+      message:
+        example: new company registration successfull
+      company:
+        type: object
+        properties:
+          companyId:
+            example: 30
+          companyName:
+            example: Wayne Tech
+          companyAddress:
+            example: 'LA, US'
+          companyTimeZone:
+            example: America/Los_Angeles
+          companyDateFormat:
+            example: MM/DD/YYYY
+          creationDate:
+            example: 1504696542000
+          companyReferer:
+            example: test
+          accountType:
+            example: partner-pay
+          accountStatus:
+            example: active
+          accountOwner:
+            example: 1147
+          passwordProtectEnvelopes:
+            example: false
+          attachCertificateToDocs:
+            example: false
+          defaultSignOption:
+            example: TYPE
+          sendNotificationToOwner:
+            example: false
+          sendPDFWithMail:
+            example: true
+          defaultFieldNavigation:
+            example: ALL
+          defaultDisplayIndicators:
+            example: true
+          allowRecipientsToDelegate:
+            example: false
+          allFeatures:
+            example:
+              - Reports
+              - Digitally Certified Pdf
+              - Upload to Cloud
+              - Attachments
+          signatureFont:
+            example: null
+          viewOnlyDefaulSignOption:
+            example: false
+          customSenderName:
+            example: null
+          customSenderEmail:
+            example: null
+  usersListData:
+    properties:
+      usersList:
+        type: array
+        items:
+          properties:
+            partyId:
+              example: 54
+            firstName:
+              example: Steve
+            lastName:
+              example: Rogers
+            emailId:
+              example: abc@gmail.com
+            address:
+              example: 'New Delhi, India'
+            dateCreated:
+              example: 1492662823000
+            companyId:
+              example: 32567
+            userRole:
+              example: Admin
+            userAddedDate:
+              example: 1504778908000
+            department:
+              example: DEV
+            title:
+              example: Tech Lead
+            active:
+              example: true
+            requestLocale:
+              example: auto
+            managerId:
+              example: null
+      allActiveUsers:
+        example: 4
+      allInactiveUsers:
+        example: 0
+  updateUserData:
+    properties:
+      user:
+        properties:
+          partyId:
+            example: 54
+          firstName:
+            example: Steve
+          lastName:
+            example: Rogers
+          address:
+            example: 'New Delhi, India'
+          userRole:
+            example: super_admin
+          department:
+            example: DEV
+          title:
+            example: Tech Lead
+          managerId:
+            example: '101'
+          active:
+            example: false
+  createUserData:
+    properties:
+      user:
+        properties:
+          firstName:
+            example: Steve
+          lastName:
+            example: Rogers
+          emailId:
+            example: abc@gmail.com
+          address:
+            example: 'New Delhi, India'
+          userRole:
+            example: admin
+          department:
+            example: DEV
+          title:
+            example: Tech Lead
+          managerId:
+            example: 101
+          active:
+            example: true
+  responseCreateUserData:
+    properties:
+      partyId:
+        example: 54
+      firstName:
+        example: Steve
+      lastName:
+        example: Rogers
+      emailId:
+        example: abc@gmail.com
+      address:
+        example: 'New Delhi, India'
+      dateCreated:
+        example: null
+      companyId:
+        example: 32567
+      userRole:
+        example: admin
+      userAddedDate:
+        example: null
+      department:
+        example: DEV
+      title:
+        example: Tech Lead
+      active:
+        example: true
+      requestLocale:
+        example: auto
+      managerId:
+        example: 101

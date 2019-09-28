@@ -19,9 +19,9 @@ basePath: /esign/api
 schemes:
   - https
 consumes:
-- application/json
+  - application/json
 produces:
-- application/json
+  - application/json
 securityDefinitions:
   Bearer:
     type: apiKey

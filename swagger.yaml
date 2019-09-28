@@ -18,6 +18,10 @@ host: esigngenie.com
 basePath: /esign/api
 schemes:
   - https
+consumes:
+- application/json
+produces:
+- application/json
 securityDefinitions:
   Bearer:
     type: apiKey
